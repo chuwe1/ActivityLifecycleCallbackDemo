@@ -2,7 +2,7 @@
 Demo for ActivityLifecycleCallbacks
 
 ------------------------------------
-先来问大家一个问题，以往对于Activity回退都是如何管理的？是否都是这样？
+先来问大家一个问题，以往对于Activity回退栈都是如何管理的？是否都是这样？
 ```
 public class BaseActivity extends AppCompatActivity {
 
@@ -24,7 +24,7 @@ public class BaseActivity extends AppCompatActivity {
 ```
 再来问大家第二个问题:
 在继承第三方SDK的某些功能的时候需要继承该SDK提供的XActivity，Java的单继承又导致XActivity的子类没法继承我们的BaseActivity，
-这样一来就不方便管理我们的回退栈了，难道有手动在XActivity的子类里面加上如上的对应代码？这样又会显得代码十分的不优雅，对于
+这样一来就不方便管理我们的回退栈了，难道要手动在XActivity的子类里面加上如上的对应代码？这样又会显得代码十分的不优雅，对于
 我这种有强迫症的来说是绝对不会允许这样的事情发生的。那么问题来了，怎么办？有人说，这个简单，把我们本身的BaseActivity继承
 XActivity就好了嘛。没错这样确实是可以解决问题，然而万一这个XActivity的父类是Activity/FragmentActivity，
 而你又想使用Support Repository(Material Design)呢(使用Support Repository需要继承
