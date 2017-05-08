@@ -119,4 +119,46 @@ private Object[] collectActivityLifecycleCallbacks() {
 ```
 这样一看就很明显了就是拿到刚才开发者们注册的接口实例，对其遍历依次调用与之对应的抽象方法，并且会把该activity作为参数传过去。
 
-这样一来我们通过此方法来管理activity的回退栈，就不需要担心什么是我们的BaseActivity还是第三方SDK的XActivity了！
+这样一来我们通过此方法来管理起activity的回退栈来是不是就不需要管他什么BaseActivity，XActivity了呢！反正**都是Activity**。
+
+于是我们就可以在Application的onCreate中调用该方法了：
+```
+@Override
+public void onCreate() {
+    super.onCreate();
+
+    registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            ActivityManager.getInstance().addActivity(activity);
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            ActivityManager.getInstance().finishActivity(activity);
+        }
+    });
+}
+```
+
+
