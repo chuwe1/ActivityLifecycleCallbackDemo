@@ -84,32 +84,41 @@ public class ActivityManager {
                 public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                     addActivity(activity);
                     Log.e(activity.getClass().getSimpleName(), "was added");
+
+                    Log.e(activity.getClass().getSimpleName(), "onCreated --- called by application");
                 }
 
                 @Override
                 public void onActivityStarted(Activity activity) {
+                    Log.e(activity.getClass().getSimpleName(), "onStarted --- called by application");
                 }
 
                 @Override
                 public void onActivityResumed(Activity activity) {
+                    Log.e(activity.getClass().getSimpleName(), "onResumed --- called by application");
                 }
 
                 @Override
                 public void onActivityPaused(Activity activity) {
+                    Log.e(activity.getClass().getSimpleName(), "onPaused --- called by application");
                 }
 
                 @Override
                 public void onActivityStopped(Activity activity) {
+                    Log.e(activity.getClass().getSimpleName(), "onStopped --- called by application");
                 }
 
                 @Override
                 public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+                    Log.e(activity.getClass().getSimpleName(), "onSavedInstanceState --- called by application");
                 }
 
                 @Override
                 public void onActivityDestroyed(Activity activity) {
                     finishActivity(activity);
                     Log.e(activity.getClass().getSimpleName(), "was removed");
+
+                    Log.e(activity.getClass().getSimpleName(), "onDestroyed --- called by application");
                 }
             };
         }
