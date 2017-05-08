@@ -2,7 +2,7 @@
 Demo for ActivityLifecycleCallbacks
 
 ------------------------------------
-先来问大家一个问题，以往对于Activity回退都是如果管理的？是否都是这样？
+先来问大家一个问题，以往对于Activity回退都是如何管理的？是否都是这样？
 ```
 public class BaseActivity extends AppCompatActivity {
 
