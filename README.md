@@ -72,7 +72,7 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
 }
 ```
 首先是定义了一个接口，然后有一个成员变量的list用来保存开发者们注册的该接口实例，注销就是从list里面remove掉该实例。
-没错就是这么简单，那么该接口又是如何作用到Activity的生命周期上的呢？我们再来看一下Activity的生命周期方法（已onCreate、onDestory）为例，
+没错就是这么简单，那么该接口又是如何作用到Activity的生命周期上的呢？我们再来看一下Activity的生命周期方法（以onCreate、onDestory）为例，
 其他的都是一样的。
 ```
 protected void onCreate(@Nullable Bundle savedInstanceState) {
