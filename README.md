@@ -1,0 +1,3 @@
+# ActivityLifecycleCallbackDemo
+Demo for ActivityLifecycleCallbacks
+---
