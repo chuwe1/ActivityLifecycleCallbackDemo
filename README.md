@@ -2,25 +2,46 @@
 Demo for ActivityLifecycleCallbacks
 
 ------------------------------------
-相信大家都碰到过这个问题:
-在继承第三方SDK的某些功能的时候需要继承该SDK提供的XActivity,
-这就与我们本身的BaseActivity（通常用来管理Activity回退栈）向冲突了，怎么办？
-有人说，这个简单，把我们本身的BaseActivity继承XActivity就好了嘛。
-没错这样确实是可以解决问题，然而万一这个XActivity的父类是Activity/FragmentActivity，
-而你又想使用Support Repository(Material Design)呢(使用Support Repository需要继承
-AppCompatActivity)？这又怎么办？好吧！如果所言，现在的主流第三方SDK都是继承AppCompatActivity
-了。
+先来问大家一个问题，以往对于Activity回退都是如果管理的？是否都是这样？
+```
+public class BaseActivity extends AppCompatActivity {
 
-但是你有想过java的继承机制是创建子类实例前会先创建一个父类实例的！！！
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ActivityManager.getInstance().addActivity(this);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        ActivityManager.getInstance().finishActivity(this);
+    }
+}
+```
+再来问大家第二个问题:
+在继承第三方SDK的某些功能的时候需要继承该SDK提供的XActivity，Java的单继承又导致XActivity的子类没法继承我们的BaseActivity，
+这样一来就不方便管理我们的回退栈了，难道有手动在XActivity的子类里面加上如上的对应代码？这样又会显得代码十分的不优雅，对于
+我这种有强迫症的来说是绝对不会允许这样的事情发生的。那么问题来了，怎么办？有人说，这个简单，把我们本身的BaseActivity继承
+XActivity就好了嘛。没错这样确实是可以解决问题，然而万一这个XActivity的父类是Activity/FragmentActivity，
+而你又想使用Support Repository(Material Design)呢(使用Support Repository需要继承
+AppCompatActivity)？这又怎么办？好吧！如你所言，现在的主流第三方SDK都是继承AppCompatActivity了。
+
+但是你有想过Java的继承机制是创建子类实例前会先创建一个父类实例的！！！
 这么跟你说吧，可能你的一个Activity完成的就是一个简单的登陆功能，而这个XActivity却有一两千行。也就是说
-你的一个登陆功能的类加载了多余的一两千行代码！这可是对内存的极大浪费啊。
+你的一个登陆功能的类加载了多余的一两千行代码！这就尴尬了，父类里的这些变量什么的该浪费多少内存啊。
 
 So, you get it now?
-那么问题来了，大家以前都是这么干的啊（其实我也是这么干的），
-直到今天我看到一个文章[我一行代码都不写实现 Toolbar! 你却还在封装 BaseActivity?](http://www.jianshu.com/p/75a5c24174b2)
-在这里我看到了Application的一个方法[registerActivityLifecycleCallbacks](https://developer.android.google.cn/reference/android/app/Application.html#registerActivityLifecycleCallbacks(android.app.Application.ActivityLifecycleCallbacks))对他研究一番，发现**此法可行**
+那么问题来了，大家以前都是这么干的啊（其实我也是这么干的），怎么才能解决这个问题呢？
+直到前几天我看到一篇文章[我一行代码都不写实现 Toolbar! 你却还在封装 BaseActivity?](http://www.jianshu.com/p/75a5c24174b2)
+在这里我看到了Application的一个方法[registerActivityLifecycleCallbacks](https://developer.android.google.cn/reference/android/app/Application.html#registerActivityLifecycleCallbacks(android.app.Application.ActivityLifecycleCallbacks))对他研究了一番，发现**此法可行**
 
-那么我们就先来看看Application对于该方法的实现
+究竟是怎么个可行法呢？就来看看我的“研究”过程...
+
+先来看看Application对于该方法的实现
 ```
 public class Application extends ContextWrapper implements ComponentCallbacks2 {
 
@@ -65,7 +86,7 @@ protected void onDestroy() {
     getApplication().dispatchActivityDestroyed(this);
 }
 ```
-可以看到对应的生命周期方法里面调用了Application与之对应的dispatchActivityXXX方法，那么我们再去看看Application里面这些方法都租了什么。
+可以看到对应的生命周期方法里面调用了Application与之对应的dispatchActivityXXX方法，那么我们再去看看Application里面这些方法都做了什么。
 ```
 private Object[] collectActivityLifecycleCallbacks() {
     Object[] callbacks = null;
