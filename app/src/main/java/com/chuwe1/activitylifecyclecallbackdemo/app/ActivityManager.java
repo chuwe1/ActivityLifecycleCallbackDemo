@@ -11,7 +11,7 @@ import java.util.Stack;
 public class ActivityManager {
 
     /* -------------------Single instance start--------------------------- */
-    private static ActivityManager instance;
+    private static volatile ActivityManager instance;
 
     private ActivityManager() {
         activityStack = new Stack<>();
